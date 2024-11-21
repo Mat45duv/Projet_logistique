@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Express Delivery | Compte non approuvé</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../../assets/css/register.css">
+    <%- include("../../public/assets/partials/toasts"); %>
+</head>
+
+<body>
+    <div class="container">
+        <div class="auth-card pending-card">
+            <h1>Compte non approuvé</h1>
+            <br>
+            <div class="status-indicator">
+                <div class="pulse"></div>
+                <span>Statut : En cours de révision</span>
+            </div>
+            <p class="message">
+                Votre compte n'est pas encore vérifié.
+                Vous ne pourrez pas accéder aux fonctionnalités tant que la vérification ne sera pas terminée.
+                Un email vous sera envoyé une fois votre compte approuvé.
+            </p>
+            <a href="/login-destroy" class="btn-secondary">Se deconnecter</a>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,24 +1,39 @@
-// Modules requis
-const express = require("express");
+/**
+ * @file index.js
+ * @author Maxencexz
+ * @description Fichier en charge de démarrer le serveur Express.
+ */
 
-// Création et configuration de l'application express (serveur)
-const serveur = express();
-const port = 3000;
+// On charge les variables d'environnement
+require("dotenv").config();
 
-// Routeur pour les authentifications (inscription, connexion, etc...)
-const authRouter = require("./routers/auth-router");
-serveur.use("/", authRouter);
+// On importe les modules requis
+const __modules = {
+    express: require("express"),
+    expressBodyParser: require('body-parser'),
+    path: require("path"),
+    middlewares: require("./src/express/middlewares/middlewares"),
+    endpointsLoader: require("./src/express/endpointsLoader"),
+    nocache: require("nocache")
+}
 
-// Ajoute l'URL-encoder pour récupérer le "body" des requêtes
-serveur.use(express.urlencoded({
-    extended: false
-}));
+// Création de l'application Express
+const app = __modules.express();
+app.disable("x-powered-by");
+app.set("view engine", "ejs");
+app.set('view cache', false);
+app.set('trust proxy', 1);
+app.use(__modules.express.static(__dirname + '/src/public'));
+app.set('views', __modules.path.join(__dirname, '/src/views'));
+app.use(__modules.expressBodyParser.json());
+app.use(__modules.expressBodyParser.urlencoded({ extended: true }));
 
-// Configure le dossier des "vues" ejs
-serveur.set("views", path.join(__dirname, "views"));
-serveur.set("view engine", "ejs");
+// Add middlewares
+app.use(__modules.middlewares.sessionMiddleware);
+app.use(__modules.middlewares.isSessionMiddleware);
 
-// Lancement du serveur
-serveur.listen(port, () => {
-    console.log(`Serveur lancé : http://localhost:${expressPort}`);
-})
+// Starts the Express server
+const server = app.listen(process.env.EXPRESS_PORT, async () => {
+    console.log(`[🔄] [WEB SERVER] Application Express démarrée; chargement des endpoints...`);
+    await __modules.endpointsLoader(app);
+});

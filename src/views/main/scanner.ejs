@@ -15,24 +15,26 @@
     style="min-height: 100vh; margin: 0;">
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript">
     </script>
-    <div id="reader" width="900px">
+    <div id="reader" width="900px" style="width: 500px; height: 500px;">
         <script>
             function onScanSuccess(decodedText, decodedResult) {
                 const id = JSON.parse(decodedText).id;
-
                 fetch("/api/livraisons/getInfo", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({ id })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data && data.data) {
-                        const livraison = data.data;
-                        // Update the page with the delivery info
-                        document.getElementById("livraisonInfo").innerHTML = `
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            id
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data && data.data) {
+                            const livraison = data.data;
+                            // Update the page with the delivery info
+                            document.getElementById("livraisonInfo")
+                                .innerHTML = ` 
                             <h2 class="subtitle is-3">Informations du Colis</h2>
                             <p><strong>ID:</strong> ${livraison.id}</p>
                             <p><strong>Nom du Client:</strong> ${livraison.nomClient}</p>
@@ -49,21 +51,33 @@
                             <p><strong>Status:</strong> ${livraison.status}</p>
                             <p><strong>Commentaires:</strong> ${livraison.commentaires}</p>
                         `;
-                    }
-                })
-                .catch(e => console.error(e));
+                        }
+                    })
+                    .catch(e => console.error(e));
             }
 
             function onScanFailure(error) {
                 console.warn(`Code scan error = ${error}`);
             }
 
-            let html5QrcodeScanner = new Html5QrcodeScanner(
-                "reader", {
-                    fps: 10,
-                    qrbox: { width: 500, height: 500 }
-                }, false);
-            html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+            // Dynamically set the QR box size based on the reader div's dimensions
+            window.addEventListener('load', function() {
+                const readerDiv = document.getElementById("reader");
+                const readerWidth = readerDiv.offsetWidth;
+                const readerHeight = readerDiv.offsetHeight;
+
+                // Initialize the scanner with dynamic QR box size
+                let html5QrcodeScanner = new Html5QrcodeScanner(
+                    "reader", {
+                        fps: 10,
+                        qrbox: {
+                            width: readerWidth,
+                            height: readerHeight
+                        }
+                    }, false);
+
+                html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+            });
         </script>
     </div>
     <div class="has-text-centered">
@@ -75,10 +89,9 @@
             <img src="logo.png" alt="Astrodev Logo">
         </figure>
     </div>
-
     <!-- New Div to show delivery info -->
-    <div id="livraisonInfo" class="container" style="max-width: 600px; margin-top: 20px;"></div>
-
+    <div id="livraisonInfo" class="container"
+        style="max-width: 600px; margin-top: 20px;"></div>
     <footer
         class="is-flex is-justify-content-space-between is-align-items-center"
         style="width: 150px; margin-bottom: 20px;">

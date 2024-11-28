@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historique des QR Codes</title>
+</head>
+<body>
+    <h1>Historique des QR Codes scannés</h1>
+    
+    <!-- Liste qui contiendra l'historique des QR codes -->
+    <ul id="history"></ul>
+    
+    <script>
+        // Récupérer les données enregistrées dans localStorage sous la clé "qrHistory"
+        let history = JSON.parse(localStorage.getItem("qrHistory")) || [];
+        // Si rien n'a été enregistré, initialiser avec un tableau vide
+
+        // Référence à la liste HTML où afficher l'historique
+        const historyList = document.getElementById("history");
+
+        // Parcourir chaque élément dans le tableau d'historique
+        history.forEach(item => {
+            // Créer un nouvel élément de liste (<li>)
+            let li = document.createElement("li");
+            
+            // Ajouter le contenu textuel à l'élément <li>
+            li.textContent = `Code : ${item.code}, Date : ${new Date(item.date).toLocaleString()}`;
+            // - item.code : le texte du QR code scanné
+            // - item.date : formaté en date lisible avec toLocaleString()
+
+            // Ajouter cet élément <li> à la liste HTML (<ul>)
+            historyList.appendChild(li);
+        });
+    </script>
+    
+    <!-- Lien pour retourner à la page de scan -->
+    <a href="index.html">Retour au scan</a>
+</body>
+</html>

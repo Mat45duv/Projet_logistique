@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery Express</title>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+        rel="stylesheet">
+</head>
+<body
+    class="has-background-light is-flex is-flex-direction-column is-justify-content-space-between is-align-items-center"
+    style="min-height: 100vh; margin: 0;">
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript">
+    </script>
+    <div id="reader" width="900px">
+        <script>
+            function onScanSuccess(decodedText, decodedResult) {
+                const id = JSON.parse(decodedText).id;
+
+                fetch("/api/livraisons/getInfo", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ id })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.data) {
+                        const livraison = data.data;
+                        // Update the page with the delivery info
+                        document.getElementById("livraisonInfo").innerHTML = `
+                            <h2 class="subtitle is-3">Informations du Colis</h2>
+                            <p><strong>ID:</strong> ${livraison.id}</p>
+                            <p><strong>Nom du Client:</strong> ${livraison.nomClient}</p>
+                            <p><strong>Adresse de Livraison:</strong> ${livraison.adresseLivraison}</p>
+                            <h3 class="subtitle is-4">Produits:</h3>
+                            <ul>
+                                ${livraison.produits.map(produit => `
+                                    <li>
+                                        <strong>${produit.nom}</strong> - ${produit.quantite} x ${produit.prixTTC}€ (Réf: ${produit.reference})
+                                    </li>
+                                `).join('')}
+                            </ul>
+                            <p><strong>Date de Livraison:</strong> ${new Date(livraison.dateLivraison).toLocaleString()}</p>
+                            <p><strong>Status:</strong> ${livraison.status}</p>
+                            <p><strong>Commentaires:</strong> ${livraison.commentaires}</p>
+                        `;
+                    }
+                })
+                .catch(e => console.error(e));
+            }
+
+            function onScanFailure(error) {
+                console.warn(`Code scan error = ${error}`);
+            }
+
+            let html5QrcodeScanner = new Html5QrcodeScanner(
+                "reader", {
+                    fps: 10,
+                    qrbox: { width: 500, height: 500 }
+                }, false);
+            html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+        </script>
+    </div>
+    <div class="has-text-centered">
+        <h1 class="title is-1 has-text-link">Scanner</h1>
+        <p class="subtitle is-6 has-text-link">Veuillez scanner votre colis</p>
+    </div>
+    <div>
+        <figure class="image is-96x96">
+            <img src="logo.png" alt="Astrodev Logo">
+        </figure>
+    </div>
+
+    <!-- New Div to show delivery info -->
+    <div id="livraisonInfo" class="container" style="max-width: 600px; margin-top: 20px;"></div>
+
+    <footer
+        class="is-flex is-justify-content-space-between is-align-items-center"
+        style="width: 150px; margin-bottom: 20px;">
+        <span class="icon has-text-warning">
+            <i class="fas fa-home fa-2x"></i>
+        </span>
+        <span class="icon has-text-warning">
+            <i class="fas fa-sign-out-alt fa-2x"></i>
+        </span>
+    </footer>
+    <script src="https://kit.fontawesome.com/a076d05399.js"
+        crossorigin="anonymous"></script>
+</body>
+</html>

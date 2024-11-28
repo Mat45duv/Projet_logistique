@@ -46,14 +46,6 @@ body {
     margin-bottom: 20px;
 }
 
-.logo-circle {
-    width: 80px;
-    height: 80px;
-    margin: 0 auto;
-    background: var(--gradient);
-    border-radius: 50%;
-    box-shadow: 0 8px 16px rgba(225, 166, 36, 0.3);
-}
 
 h1 {
     color: var(--dark);
@@ -83,6 +75,7 @@ input {
     border-radius: 12px;
     font-size: 16px;
     transition: all 0.3s ease;
+    color: white;
     background: var(--dark);
 }
 

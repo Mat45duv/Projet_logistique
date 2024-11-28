@@ -118,12 +118,7 @@ module.exports = async function (app) {
     try {
         await chargerEndpoints(app, endpointsDir);
 
-        // On handle les erreurs 404
-        app.get("/*", (req, res) => {
-            res.status(404).render("errors/error-404", {
-                title: "Page non trouvée"
-            })
-        });
+       
 
     } catch (error) {
         console.error(`[❌] [WEB SERVER] Erreur pendant le chargement des endpoints : ${error.message}`);

@@ -1,25 +1,42 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Service de livraison de colis rapide et fiable.">
-    <title>Delivery Express</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Delivery Express</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+  
 </head>
-<body>
+<body class="has-background-light is-flex is-flex-direction-column is-justify-content-space-between is-align-items-center" style="min-height: 100vh; margin: 0;">
 
-    <!-- Section principale -->
-    <img src="scanner.png" alt="illustration scanner">
-    <div class="title">
-        <h1>Delivery Express</h1>
-        <p>Dévellopé par</p>
-        <img src="logo.png" alt="logo astro dev">
-    </div>
-    <footer>
-        <p>&copy; 2024 Livraison de Colis | Tous droits réservés</p>
-    </footer>
+  <div class="mt-5">
+    <figure class="image is-150x150">
+      <img src="scanner.png" alt="QR Code">
+    </figure>
+  </div>
 
-    <script src="script.js"></script>
+  <div class="has-text-centered">
+    <h1 class="title is-1 has-text-primary">Delivery Express</h1>
+    <p class="subtitle is-6 has-text-grey">Développé par</p>
+  </div>
+
+  <div>
+    <figure class="image is-96x96">
+      <img src="logo.png" alt="Astrodev Logo">
+    </figure>
+  </div>
+
+  <footer class="is-flex is-justify-content-space-between is-align-items-center" style="width: 150px; margin-bottom: 20px;">
+    <span class="icon has-text-warning">
+      <i class="fas fa-home fa-2x"></i>
+    </span>
+    <span class="icon has-text-warning">
+      <i class="fas fa-sign-out-alt fa-2x"></i>
+    </span>
+  </footer>
+
+ 
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </body>
 </html>

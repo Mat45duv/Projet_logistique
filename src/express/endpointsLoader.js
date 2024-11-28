@@ -14,12 +14,12 @@ const middlewaresList = require("./middlewares/middlewares");
 function configurerRoute(app, routerData) {
     const middlewares = [];
 
-    // On vérifie si la route néssecite une authentification API
+    // On vérifie si la route nécessite une authentification API
     if (routerData.auth && routerData.auth.api && routerData.auth.api === true) {
         middlewares.push(middlewaresList.apiAuthentication);
     }
 
-    // On vérifie si la route néssecite une authentification session (utilisateur connecté)
+    // On vérifie si la route nécessite une authentification session (utilisateur connecté)
     if (routerData.auth && routerData.auth.session && routerData.auth.session === true) {
         middlewares.push(middlewaresList.userAuthentication);
     }
@@ -29,7 +29,7 @@ function configurerRoute(app, routerData) {
         middlewares.push(...routerData.middlewares);
     }
 
-    // Fonction pour éxecuter les routes avec un catch pour les erreurs
+    // Fonction pour exécuter les routes avec un catch pour les erreurs
     const executeWithCatch = async (req, res, next) => {
         try {
             await routerData.execute(req, res);
@@ -39,13 +39,13 @@ function configurerRoute(app, routerData) {
                 erreur: {
                     message: "Une erreur inattendue s'est produite.",
                     type: "erreur_serveur",
-                    code: "erreur_interne_serveur"
-                }
+                    code: "erreur_interne_serveur",
+                },
             });
         }
     };
 
-    // On ajoute la fonction d'éxecution avec gestion d'erreurs à la liste des middlewares
+    // On ajoute la fonction d'exécution avec gestion d'erreurs à la liste des middlewares
     middlewares.push(executeWithCatch);
 
     // On charge la route dans l'application express en fonction de la méthode HTTP
@@ -69,36 +69,62 @@ function configurerRoute(app, routerData) {
     }
 
     // On affiche un message de confirmation dans la console
-    console.log(`[✅] [WEB SERVER] Endpoint chargé avec succès: ${path} [${method}] ${routerData.auth.api ? '[AUTH🔒]' : ''}`);
+    console.log(`[✅] [WEB SERVER] Endpoint chargé avec succès: ${path} [${method}] ${routerData.auth?.api ? '[AUTH🔒]' : ''}`);
 }
 
-function chargerEndpoints(app, cheminDossier) {
+async function chargerEndpoints(app, cheminDossier) {
     const fichiers = fs.readdirSync(cheminDossier);
 
-    fichiers.forEach(fichier => {
+    // Arrays for endpoints with normal and low priority
+    const normalPriorityEndpoints = [];
+    const lowPriorityEndpoints = [];
+
+    fichiers.forEach((fichier) => {
         const cheminFichier = path.resolve(cheminDossier, fichier);
         const statsFichier = fs.statSync(cheminFichier);
 
-        if (statsFichier.isFile() && fichier.endsWith('.js')) {
+        if (statsFichier.isFile() && fichier.endsWith(".js")) {
             const donneesRouteur = require(cheminFichier);
 
             if (donneesRouteur.enabled) {
-                configurerRoute(app, donneesRouteur);
+                if (donneesRouteur.lowRegisterPriority) {
+                    lowPriorityEndpoints.push(donneesRouteur);
+                } else {
+                    normalPriorityEndpoints.push(donneesRouteur);
+                }
             }
         } else if (statsFichier.isDirectory()) {
             // Appel récursif pour gérer les sous-dossiers
             chargerEndpoints(app, cheminFichier);
         }
     });
+
+    // Charger les endpoints avec priorité normale
+    for (const routeur of normalPriorityEndpoints) {
+        console.log("Chargement de l'endpoint", routeur.path);
+        await configurerRoute(app, routeur);
+    }
+
+    // Charger les endpoints avec priorité basse
+    for (const routeur of lowPriorityEndpoints) {
+        await configurerRoute(app, routeur);
+    }
 }
 
-module.exports = function (app) {
-
-    // On obtient le dossier contenant tout les endpoints
+module.exports = async function (app) {
+    // On obtient le dossier contenant tous les endpoints
     const endpointsDir = path.join(__dirname, "endpoints");
 
     try {
-        chargerEndpoints(app, endpointsDir);
+        await chargerEndpoints(app, endpointsDir);
+
+        // On handle les erreurs 404
+        app.get("/*", (req, res) => {
+            res.status(404).render("errors/error-404", {
+                title: "Page non trouvée"
+            })
+        });
+
     } catch (error) {
         console.error(`[❌] [WEB SERVER] Erreur pendant le chargement des endpoints : ${error.message}`);
     }

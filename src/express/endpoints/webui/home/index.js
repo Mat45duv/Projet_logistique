@@ -21,7 +21,9 @@ module.exports = {
     "execute": async function (routerRequest, routerResponse) {
 
         // On retourne un message de bienvenue
-        routerResponse.status(200).send("Bienvenue sur l'application web de test.");
+        routerResponse.status(200).render("main/index", {
+            "title": "Page d'accueil",
+        })
 
     }
 }

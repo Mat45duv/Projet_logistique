@@ -27,6 +27,7 @@ app.use(__modules.express.static(__dirname + '/src/public'));
 app.set('views', __modules.path.join(__dirname, '/src/views'));
 app.use(__modules.expressBodyParser.json());
 app.use(__modules.expressBodyParser.urlencoded({ extended: true }));
+app.use(__modules.nocache());
 
 // Add middlewares
 app.use(__modules.middlewares.sessionMiddleware);

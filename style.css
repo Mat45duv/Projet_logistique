@@ -2,10 +2,9 @@
 
 body {
     font-family: 'Roboto', sans-serif;
-}
-
-.title {
-    color: #007bff; /* Blue color */
+  }
+  .has-text-blue {
+    color: blue !important;
   }
 
 

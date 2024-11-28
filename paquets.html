@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cube 3D Interactif</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+            perspective: 1000px;
+        }
+
+        .cube {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            transform-style: preserve-3d;
+            transform: rotateX(0deg) rotateY(0deg);
+            transition: transform 0.1s;
+        }
+
+        .cube div {
+            position: absolute;
+            width: 100px; /* Divisée en 4 parties */
+            height: 100px;
+            background: #d2a679;
+            border: 2px solid #b68e62;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+        }
+
+        /* Faces divisées visibles */
+        .front {
+            transform: translateZ(100px);
+        }
+
+        /* Détails de découpe */
+        .cube div.part1 { top: 0; left: 0; }
+        .cube div.part2 { top: 0; left: 100px; }
+        .cube div.part3 { top: 100px; left: 0; }
+        .cube div.part4 { top: 100px; left: 100px; }
+        
+        /* Effet carton */
+        .cube div::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: repeating-linear-gradient(
+                45deg,
+                rgba(0, 0, 0, 0.05) 0,
+                rgba(0, 0, 0, 0.05) 10px,
+                transparent 10px,
+                transparent 20px
+            );
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="cube" id="cube">
+        <!-- Face avant divisée en 4 parties -->
+        <div class="front part1" data-part="1"></div>
+        <div class="front part2" data-part="2"></div>
+        <div class="front part3" data-part="3"></div>
+        <div class="front part4" data-part="4"></div>
+        
+    </div>
+
+    <script>
+        const cube = document.getElementById('cube');
+        let isDragging = false;
+        let previousX, previousY;
+        let rotationX = 0, rotationY = 0;
+
+        // Gestion des événements souris pour rotation
+        document.addEventListener('mousedown', (event) => {
+            isDragging = true;
+            previousX = event.clientX;
+            previousY = event.clientY;
+        });
+
+        document.addEventListener('mousemove', (event) => {
+            if (isDragging) {
+                const deltaX = event.clientX - previousX;
+                const deltaY = event.clientY - previousY;
+                rotationY += deltaX * 0.5; // Ajuster sensibilité
+                rotationX -= deltaY * 0.5;
+                cube.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
+                previousX = event.clientX;
+                previousY = event.clientY;
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+
+        // Gestion tactile pour mobile
+        document.addEventListener('touchstart', (event) => {
+            isDragging = true;
+            previousX = event.touches[0].clientX;
+            previousY = event.touches[0].clientY;
+        });
+
+        document.addEventListener('touchmove', (event) => {
+            if (isDragging) {
+                const deltaX = event.touches[0].clientX - previousX;
+                const deltaY = event.touches[0].clientY - previousY;
+                rotationY += deltaX * 0.5;
+                rotationX -= deltaY * 0.5;
+                cube.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
+                previousX = event.touches[0].clientX;
+                previousY = event.touches[0].clientY;
+            }
+        });
+
+        document.addEventListener('touchend', () => {
+            isDragging = false;
+        });
+
+        // Gestion des clics sur les parties
+        const parts = document.querySelectorAll('.cube div');
+        parts.forEach(part => {
+            part.addEventListener('click', (event) => {
+                const partNumber = event.target.dataset.part;
+                alert(`Vous avez ajouté un colis à la section ${partNumber} !`);
+                // Ajouter ici une action comme un changement de couleur ou une animation
+                event.target.style.background = '#a67d50'; // Exemple : changer la couleur après clic
+            });
+        });
+    </script>
+</body>
+</html>

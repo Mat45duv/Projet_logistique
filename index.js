@@ -1,7 +1,7 @@
 /**
  * @file index.js
  * @author Maxencexz
- * @description Fichier en charge de démarrer le serveur Express.
+ * @description Fichier en charge de démarrer le serveur Express avec HTTPS.
  */
 
 // On charge les variables d'environnement
@@ -14,8 +14,10 @@ const __modules = {
     path: require("path"),
     middlewares: require("./src/express/middlewares/middlewares"),
     endpointsLoader: require("./src/express/endpointsLoader"),
-    nocache: require("nocache")
-}
+    nocache: require("nocache"),
+    https: require("https"), // HTTPS module
+    fs: require("fs") // File system module to read certificate and key files
+};
 
 // Création de l'application Express
 const app = __modules.express();
@@ -33,8 +35,14 @@ app.use(__modules.nocache());
 app.use(__modules.middlewares.sessionMiddleware);
 app.use(__modules.middlewares.isSessionMiddleware);
 
-// Starts the Express server
-const server = app.listen(process.env.EXPRESS_PORT, async () => {
-    console.log(`[🔄] [WEB SERVER] Application Express démarrée; chargement des endpoints...`);
+// Load HTTPS certificates
+const httpsOptions = {
+    key: __modules.fs.readFileSync(__dirname + '/certificate/localhost+2-key.pem'),
+    cert: __modules.fs.readFileSync(__dirname + '/certificate/localhost+2.pem')
+};
+
+// Start the HTTPS server
+const server = __modules.https.createServer(httpsOptions, app).listen(process.env.EXPRESS_PORT, async () => {
+    console.log(`[🔒] [WEB SERVER] Application Express démarrée en HTTPS; chargement des endpoints...`);
     await __modules.endpointsLoader(app);
 });

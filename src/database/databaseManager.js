@@ -67,20 +67,32 @@ module.exports = {
     livraisons: {
 
         // Fonction : obtenir une livraison avec son ID
-        obtenirLivraisonAvecID: (id) => {
+        obtenirLivraisonAvecID: (id, includeBag = false) => {
             return new Promise((resolve, reject) => {
-                livraisonsDatabase.findOne({ id }, (err, doc) => {
-                    if (err) return resolve(null);
+                livraisonsDatabase.findOne({ id }, async (err, doc) => {
+                    if (err || !doc) return resolve(null);
+                    if (includeBag && doc.numBag) {
+                        const bag = await bagsDatabase.findOne({ id: doc.numBag });
+                        doc.bag = bag || null;
+                    }
                     return resolve(doc);
                 });
             });
         },
 
         // Fonction : obtenir toutes les livraisons
-        obtenirToutesLesLivraisons: () => {
+        obtenirToutesLesLivraisons: (includeBag = false) => {
             return new Promise((resolve, reject) => {
-                livraisonsDatabase.find({}, (err, docs) => {
-                    if (err) return resolve(null);
+                livraisonsDatabase.find({}, async (err, docs) => {
+                    if (err || !docs) return resolve(null);
+                    if (includeBag) {
+                        for (const doc of docs) {
+                            if (doc.numBag) {
+                                const bag = await bagsDatabase.findOne({ id: doc.numBag });
+                                doc.bag = bag || null;
+                            }
+                        }
+                    }
                     return resolve(docs);
                 });
             });

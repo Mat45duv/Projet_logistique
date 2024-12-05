@@ -62,7 +62,7 @@
             flex: 1;
             background-color: #fff;
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(3, 1fr); /* 3 colonnes fixes */
             grid-template-rows: repeat(7, 1fr);
             grid-gap: 10px;
             padding: 10px;
@@ -125,15 +125,21 @@
             background-color: #555;
         }
 
-        /* Responsive: Petits écrans */
+        /* Responsive: Ajuste la taille des camions sur petits écrans */
         @media (max-width: 768px) {
             .truck-container {
-                width: 90%; /* Les camions prennent presque toute la largeur */
-                height: auto; /* Ajuste la hauteur en fonction du contenu */
+                width: 90%; /* Les camions s'adaptent à la largeur de l'écran */
+                height: auto; /* Ajuste la hauteur automatiquement */
             }
 
             .cargo {
-                grid-template-columns: repeat(2, 1fr); /* Réduit à 2 colonnes sur petit écran */
+                grid-template-columns: repeat(3, 1fr); /* Toujours 3 colonnes */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .truck-container {
+                width: 100%; /* Prend toute la largeur sur les très petits écrans */
             }
         }
     </style>

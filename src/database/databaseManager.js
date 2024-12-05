@@ -13,6 +13,7 @@ const __modules = {
 // On initialise les fichiers .db
 const usersDatabase = new __modules.NEDatabase({ filename: __modules.path.join(__dirname, "data/users.db"), autoload: true });
 const livraisonsDatabase = new __modules.NEDatabase({ filename: __modules.path.join(__dirname, "data/livraisons.db"), autoload: true });
+const bagsDatabase = new __modules.NEDatabase({ filename: __modules.path.join(__dirname, "data/bags.db"), autoload: true });
 
 // On export les méthodes
 module.exports = {
@@ -145,6 +146,50 @@ module.exports = {
             });
         },
 
-    }
+    },
 
+    // Catégorie : bags
+    bags: {
+
+        // Fonction : obtenir un bag avec son ID
+        obtenirBagAvecId: (id) => {
+            return new Promise((resolve, reject) => {
+                bagsDatabase.findOne({ id }, (err, doc) => {
+                    if (err) return resolve(null);
+                    return resolve(doc);
+                });
+            });
+        },
+
+        // Fonction : obtenir tous les bags
+        obtenirTousLesBags: () => {
+            return new Promise((resolve, reject) => {
+                bagsDatabase.find({}, (err, docs) => {
+                    if (err) return resolve(null);
+                    return resolve(docs);
+                });
+            });
+        },
+
+        // Fonction : ajouter un bag. Si le document ayant le même ID existe déjà, il sera modifié (upsert)
+        ajouterBag: (id, data) => {
+            return new Promise((resolve, reject) => {
+                bagsDatabase.update({ id }, { $set: { ...data } }, { upsert: true }, (err, numReplaced) => {
+                    if (err) resolve(false);
+                    else resolve(true);
+                });
+            });
+        },
+
+        // Fonction : supprimer un bag avec son ID
+        supprimerBag: (id) => {
+            return new Promise((resolve, reject) => {
+                bagsDatabase.remove({ id }, {}, (err, numRemoved) => {
+                    if (err) resolve(false);
+                    else resolve(true);
+                });
+            });
+        },
+
+    }
 }

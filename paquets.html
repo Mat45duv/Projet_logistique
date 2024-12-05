@@ -17,7 +17,9 @@
 
         .trucks-container {
             display: flex;
+            flex-wrap: wrap; /* Permet de passer à plusieurs lignes si nécessaire */
             gap: 20px;
+            justify-content: center; /* Centrage horizontal */
         }
 
         .truck-container {
@@ -121,6 +123,18 @@
 
         .info-popup button:hover {
             background-color: #555;
+        }
+
+        /* Responsive: Petits écrans */
+        @media (max-width: 768px) {
+            .truck-container {
+                width: 90%; /* Les camions prennent presque toute la largeur */
+                height: auto; /* Ajuste la hauteur en fonction du contenu */
+            }
+
+            .cargo {
+                grid-template-columns: repeat(2, 1fr); /* Réduit à 2 colonnes sur petit écran */
+            }
         }
     </style>
 </head>

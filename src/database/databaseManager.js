@@ -105,6 +105,46 @@ module.exports = {
             });
         },
 
+        // Changer le status d'une livraison en livrée
+        indiquerLivraisonCommeEtantLivree: (id) => {
+            return new Promise((resolve, reject) => {
+                livraisonsDatabase.update({ id }, { $set: { status: 1 } }, {}, (err, numReplaced) => {
+                    if (err) resolve(false);
+                    else resolve(true);
+                });
+            });
+        },
+
+        // Changer le status d'une livraison en non livrée
+        indiquerLivraisonCommeEtantNonLivree: (id) => {
+            return new Promise((resolve, reject) => {
+                livraisonsDatabase.update({ id }, { $set: { status: 0 } }, {}, (err, numReplaced) => {
+                    if (err) resolve(false);
+                    else resolve(true);
+                });
+            });
+        },
+
+        // Définir le numéro de bag d'un colis
+        definirNumeroDeBag: (id, numBag) => {
+            return new Promise((resolve, reject) => {
+                livraisonsDatabase.update({ id }, { $set: { bag: numBag } }, {}, (err, numReplaced) => {
+                    if (err) resolve(false);
+                    else resolve(true);
+                });
+            });
+        },
+
+        // Définir la hauteur du colis dans le bag
+        definirHauteurDuBag: (id, height) => {
+            return new Promise((resolve, reject) => {
+                livraisonsDatabase.update({ id }, { $set: { height } }, {}, (err, numReplaced) => {
+                    if (err) resolve(false);
+                    else resolve(true);
+                });
+            });
+        },
+
     }
 
 }

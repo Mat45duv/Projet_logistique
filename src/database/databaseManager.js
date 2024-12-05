@@ -128,7 +128,7 @@ module.exports = {
         // Définir le numéro de bag d'un colis
         definirNumeroDeBag: (id, numBag) => {
             return new Promise((resolve, reject) => {
-                livraisonsDatabase.update({ id }, { $set: { bag: numBag } }, {}, (err, numReplaced) => {
+                livraisonsDatabase.update({ id }, { $set: { numBag: numBag } }, {}, (err, numReplaced) => {
                     if (err) resolve(false);
                     else resolve(true);
                 });
@@ -136,9 +136,9 @@ module.exports = {
         },
 
         // Définir la hauteur du colis dans le bag
-        definirHauteurDuBag: (id, height) => {
+        definirHauteurDuBag: (id, hauteurBag) => {
             return new Promise((resolve, reject) => {
-                livraisonsDatabase.update({ id }, { $set: { height } }, {}, (err, numReplaced) => {
+                livraisonsDatabase.update({ id }, { $set: { hauteurBag } }, {}, (err, numReplaced) => {
                     if (err) resolve(false);
                     else resolve(true);
                 });

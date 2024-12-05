@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Camion de livraison</title>
+    <title>Camions de livraison</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -15,13 +15,17 @@
             background-color: #f0f0f0;
         }
 
+        .trucks-container {
+            display: flex;
+            gap: 20px;
+        }
+
         .truck-container {
             width: 300px;
             height: 700px;
             background-color: #cccccc;
             border: 5px solid #555;
             border-radius: 10px;
-            position: relative;
             display: flex;
             flex-direction: column;
             padding: 10px;
@@ -37,10 +41,17 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            position: relative;
         }
 
-        .cab:before {
-            content: "Cabine";
+        #cab1:before {
+            content: "Bas"; /* Texte pour la cabine du camion de gauche */
+            font-weight: bold;
+            color: #fff;
+        }
+
+        #cab2:before {
+            content: "Haut"; /* Texte pour la cabine du camion de droite */
             font-weight: bold;
             color: #fff;
         }
@@ -114,10 +125,14 @@
     </style>
 </head>
 <body>
-    <div class="truck-container">
-        <div class="cab"></div>
-        <div class="cargo" id="cargo">
-            <!-- Les colis seront générés dynamiquement -->
+    <div class="trucks-container">
+        <div class="truck-container">
+            <div class="cab" id="cab1"></div>
+            <div class="cargo" id="cargo1"></div>
+        </div>
+        <div class="truck-container">
+            <div class="cab" id="cab2"></div>
+            <div class="cargo" id="cargo2"></div>
         </div>
     </div>
 
@@ -128,39 +143,45 @@
     </div>
 
     <script>
-        // Fonction pour générer les colis
-        const cargo = document.getElementById('cargo');
-        const packages = [
-            { id: 1, info: "Colis 1 : Livres" },
-            { id: 2, info: "Colis 2 : Vêtements" },
-            { id: 3, info: "Colis 3 : Électronique" },
-            { id: 4, info: "Colis 4 : Jouets" },
-            { id: 5, info: "Colis 5 : Nourriture" },
-            { id: 6, info: "Colis 6 : Accessoires" },
-            { id: 7, info: "Colis 7 : Documents" },
-            { id: 8, info: "Colis 8 : Meubles" },
-            { id: 9, info: "Colis 9 : Outils" },
-            { id: 10, info: "Colis 10 : Produits de beauté" },
-            { id: 11, info: "Colis 11 : Jouets pour animaux" },
-            { id: 12, info: "Colis 12 : Produits de nettoyage" },
-            { id: 13, info: "Colis 13 : Gadgets" },
-            { id: 14, info: "Colis 14 : Fleurs" },
-            { id: 15, info: "Colis 15 : Matériel de bureau" },
-            { id: 16, info: "Colis 16 : Médicaments" },
-            { id: 17, info: "Colis 17 : Chaussures" },
-            { id: 18, info: "Colis 18 : Articles de sport" },
-            { id: 19, info: "Colis 19 : Articles de décoration" },
-            { id: 20, info: "Colis 20 : Jeux vidéo" },
-            { id: 21, info: "Colis 21 : Alimentation pour animaux" },
-        ];
+        // Fonction pour générer les colis dans un conteneur spécifique
+        function generatePackages(containerId) {
+            const cargo = document.getElementById(containerId);
+            const packages = [
+                { id: 1, info: "Colis 1 : Livres" },
+                { id: 2, info: "Colis 2 : Vêtements" },
+                { id: 3, info: "Colis 3 : Électronique" },
+                { id: 4, info: "Colis 4 : Jouets" },
+                { id: 5, info: "Colis 5 : Nourriture" },
+                { id: 6, info: "Colis 6 : Accessoires" },
+                { id: 7, info: "Colis 7 : Documents" },
+                { id: 8, info: "Colis 8 : Meubles" },
+                { id: 9, info: "Colis 9 : Outils" },
+                { id: 10, info: "Colis 10 : Produits de beauté" },
+                { id: 11, info: "Colis 11 : Jouets pour animaux" },
+                { id: 12, info: "Colis 12 : Produits de nettoyage" },
+                { id: 13, info: "Colis 13 : Gadgets" },
+                { id: 14, info: "Colis 14 : Fleurs" },
+                { id: 15, info: "Colis 15 : Matériel de bureau" },
+                { id: 16, info: "Colis 16 : Médicaments" },
+                { id: 17, info: "Colis 17 : Chaussures" },
+                { id: 18, info: "Colis 18 : Articles de sport" },
+                { id: 19, info: "Colis 19 : Articles de décoration" },
+                { id: 20, info: "Colis 20 : Jeux vidéo" },
+                { id: 21, info: "Colis 21 : Alimentation pour animaux" },
+            ];
 
-        packages.forEach(pkg => {
-            const packageDiv = document.createElement('div');
-            packageDiv.className = 'package';
-            packageDiv.textContent = `Colis ${pkg.id}`;
-            packageDiv.onclick = () => showPopup(pkg.info);
-            cargo.appendChild(packageDiv);
-        });
+            packages.forEach(pkg => {
+                const packageDiv = document.createElement('div');
+                packageDiv.className = 'package';
+                packageDiv.textContent = `Colis ${pkg.id}`;
+                packageDiv.onclick = () => showPopup(pkg.info);
+                cargo.appendChild(packageDiv);
+            });
+        }
+
+        // Générer les colis pour chaque camion
+        generatePackages('cargo1');
+        generatePackages('cargo2');
 
         // Fonction pour afficher les informations d'un colis
         function showPopup(info) {

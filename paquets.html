@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vue 2D d'un camion de livraison</title>
+    <title>Camion de livraison</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -17,7 +17,7 @@
 
         .truck-container {
             width: 300px;
-            height: 600px;
+            height: 700px;
             background-color: #cccccc;
             border: 5px solid #555;
             border-radius: 10px;
@@ -50,6 +50,7 @@
             background-color: #fff;
             display: grid;
             grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(7, 1fr);
             grid-gap: 10px;
             padding: 10px;
             border: 5px solid #555;
@@ -69,20 +70,111 @@
             font-weight: bold;
             color: #663300;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .package:hover {
+            transform: scale(1.1);
+        }
+
+        .info-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border: 2px solid #555;
+            border-radius: 10px;
+            padding: 20px;
+            width: 300px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: none;
+        }
+
+        .info-popup h2 {
+            margin-top: 0;
+        }
+
+        .info-popup button {
+            margin-top: 10px;
+            padding: 5px 10px;
+            border: none;
+            background-color: #888;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .info-popup button:hover {
+            background-color: #555;
         }
     </style>
 </head>
 <body>
     <div class="truck-container">
         <div class="cab"></div>
-        <div class="cargo">
-            <div class="package">Colis 1</div>
-            <div class="package">Colis 2</div>
-            <div class="package">Colis 3</div>
-            <div class="package">Colis 4</div>
-            <div class="package">Colis 5</div>
-            <div class="package">Colis 6</div>
+        <div class="cargo" id="cargo">
+            <!-- Les colis seront générés dynamiquement -->
         </div>
     </div>
+
+    <div class="info-popup" id="infoPopup">
+        <h2>Informations sur le colis</h2>
+        <p id="infoText"></p>
+        <button onclick="closePopup()">Fermer</button>
+    </div>
+
+    <script>
+        // Fonction pour générer les colis
+        const cargo = document.getElementById('cargo');
+        const packages = [
+            { id: 1, info: "Colis 1 : Livres" },
+            { id: 2, info: "Colis 2 : Vêtements" },
+            { id: 3, info: "Colis 3 : Électronique" },
+            { id: 4, info: "Colis 4 : Jouets" },
+            { id: 5, info: "Colis 5 : Nourriture" },
+            { id: 6, info: "Colis 6 : Accessoires" },
+            { id: 7, info: "Colis 7 : Documents" },
+            { id: 8, info: "Colis 8 : Meubles" },
+            { id: 9, info: "Colis 9 : Outils" },
+            { id: 10, info: "Colis 10 : Produits de beauté" },
+            { id: 11, info: "Colis 11 : Jouets pour animaux" },
+            { id: 12, info: "Colis 12 : Produits de nettoyage" },
+            { id: 13, info: "Colis 13 : Gadgets" },
+            { id: 14, info: "Colis 14 : Fleurs" },
+            { id: 15, info: "Colis 15 : Matériel de bureau" },
+            { id: 16, info: "Colis 16 : Médicaments" },
+            { id: 17, info: "Colis 17 : Chaussures" },
+            { id: 18, info: "Colis 18 : Articles de sport" },
+            { id: 19, info: "Colis 19 : Articles de décoration" },
+            { id: 20, info: "Colis 20 : Jeux vidéo" },
+            { id: 21, info: "Colis 21 : Alimentation pour animaux" },
+        ];
+
+        packages.forEach(pkg => {
+            const packageDiv = document.createElement('div');
+            packageDiv.className = 'package';
+            packageDiv.textContent = `Colis ${pkg.id}`;
+            packageDiv.onclick = () => showPopup(pkg.info);
+            cargo.appendChild(packageDiv);
+        });
+
+        // Fonction pour afficher les informations d'un colis
+        function showPopup(info) {
+            const popup = document.getElementById('infoPopup');
+            const infoText = document.getElementById('infoText');
+            infoText.textContent = info;
+            popup.style.display = 'block';
+        }
+
+        // Fonction pour fermer la popup
+        function closePopup() {
+            const popup = document.getElementById('infoPopup');
+            popup.style.display = 'none';
+        }
+    </script>
 </body>
 </html>

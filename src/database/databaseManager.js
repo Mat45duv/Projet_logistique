@@ -72,7 +72,7 @@ module.exports = {
                     if (err || !doc) return resolve(null);
                     if (includeBag && doc.numBag) {
                         module.exports.bags.obtenirBagAvecId(doc.numBag).then(bagDoc => {
-                            doc.bag = bagDoc || null;
+                            doc.bag = bagDoc || {};
                             resolve(doc);
                         });
                     } else {
@@ -91,7 +91,7 @@ module.exports = {
                         const promises = docs.map(doc => {
                             if (doc.numBag) {
                                 return module.exports.bags.obtenirBagAvecId(doc.numBag).then(bagDoc => {
-                                    doc.bag = bagDoc || null;
+                                    doc.bag = bagDoc || {};
                                 });
                             }
                         });

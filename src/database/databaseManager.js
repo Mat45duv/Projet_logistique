@@ -72,8 +72,9 @@ module.exports = {
                 livraisonsDatabase.findOne({ id }, async (err, doc) => {
                     if (err || !doc) return resolve(null);
                     if (includeBag && doc.numBag) {
-                        const bag = await bagsDatabase.findOne({ id: doc.numBag });
-                        doc.bag = bag || null;
+                        bagsDatabase.findOne({ id: doc.numBag }, (err, bagDoc) => {
+                            doc.bag = bagDoc || null;
+                        });
                     }
                     return resolve(doc);
                 });
@@ -88,8 +89,9 @@ module.exports = {
                     if (includeBag) {
                         for (const doc of docs) {
                             if (doc.numBag) {
-                                const bag = await bagsDatabase.findOne({ id: doc.numBag });
-                                doc.bag = bag || null;
+                                bagsDatabase.findOne({ id: doc.numBag }, (err, bagDoc) => {
+                                    doc.bag = bagDoc || null;
+                                });
                             }
                         }
                     }

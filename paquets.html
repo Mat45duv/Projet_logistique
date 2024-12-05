@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Colis - Boîte 3D</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+            perspective: 1000px;
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .instructions {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .cube {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            transform-style: preserve-3d;
+            transform: rotateX(-20deg) rotateY(30deg);
+            transition: transform 0.1s;
+        }
+
+        .cube-face {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            cursor: pointer;
+        }
+
+        .cube-face div {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: #d2a679;
+            border: 2px solid #b68e62;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px; /* Taille du colis plus petit */
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* Effet carton */
+        .cube-face div::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: repeating-linear-gradient(
+                45deg,
+                rgba(0, 0, 0, 0.05) 0,
+                rgba(0, 0, 0, 0.05) 10px,
+                transparent 10px,
+                transparent 20px
+            );
+            pointer-events: none;
+        }
+
+        /* Faces du cube */
+        .front { transform: translateZ(150px); }
+        .back { transform: rotateY(180deg) translateZ(150px); }
+        .left { transform: rotateY(-90deg) translateZ(150px); }
+        .right { transform: rotateY(90deg) translateZ(150px); }
+        .top { transform: rotateX(90deg) translateZ(150px); }
+        .bottom { transform: rotateX(-90deg) translateZ(150px); }
+
+        /* Couleur modifiée après ajout de colis */
+        .filled {
+            background-color: #ffcc66;
+        }
+
+        /* Classe pour cacher la face */
+        .hidden {
+            visibility: hidden;
+        }
+
+        /* Style pour afficher la section en dessous */
+        .section-info {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+
+        /* Cacher les faces qui sont ouvertes */
+        .open {
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+    </style>
+</head>
+<body>
+    <h1>Gestion des Colis - Boîte 3D</h1>
+    <p class="instructions">Cliquez sur une section de la boîte pour y placer un colis.</p>
+    <div class="cube" id="cube">
+        <!-- Faces du cube -->
+        <div class="cube-face front" id="front">
+            <div data-part="front-1"></div>
+            <div data-part="front-2"></div>
+            <div data-part="front-3"></div>
+            <div data-part="front-4"></div>
+            <div data-part="front-5"></div>
+            <div data-part="front-6"></div>
+            <div data-part="front-7"></div>
+            <div data-part="front-8"></div>
+            <div data-part="front-9"></div>
+        </div>
+        <div class="cube-face back" id="back">
+            <div data-part="back-1"></div>
+            <div data-part="back-2"></div>
+            <div data-part="back-3"></div>
+            <div data-part="back-4"></div>
+            <div data-part="back-5"></div>
+            <div data-part="back-6"></div>
+            <div data-part="back-7"></div>
+            <div data-part="back-8"></div>
+            <div data-part="back-9"></div>
+        </div>
+        <div class="cube-face left" id="left">
+            <div data-part="left-1"></div>
+            <div data-part="left-2"></div>
+            <div data-part="left-3"></div>
+            <div data-part="left-4"></div>
+            <div data-part="left-5"></div>
+            <div data-part="left-6"></div>
+            <div data-part="left-7"></div>
+            <div data-part="left-8"></div>
+            <div data-part="left-9"></div>
+        </div>
+        <div class="cube-face right" id="right">
+            <div data-part="right-1"></div>
+            <div data-part="right-2"></div>
+            <div data-part="right-3"></div>
+            <div data-part="right-4"></div>
+            <div data-part="right-5"></div>
+            <div data-part="right-6"></div>
+            <div data-part="right-7"></div>
+            <div data-part="right-8"></div>
+            <div data-part="right-9"></div>
+        </div>
+        <div class="cube-face top" id="top">
+            <div data-part="top-1"></div>
+            <div data-part="top-2"></div>
+            <div data-part="top-3"></div>
+            <div data-part="top-4"></div>
+            <div data-part="top-5"></div>
+            <div data-part="top-6"></div>
+            <div data-part="top-7"></div>
+            <div data-part="top-8"></div>
+            <div data-part="top-9"></div>
+        </div>
+        <div class="cube-face bottom" id="bottom">
+            <div data-part="bottom-1"></div>
+            <div data-part="bottom-2"></div>
+            <div data-part="bottom-3"></div>
+            <div data-part="bottom-4"></div>
+            <div data-part="bottom-5"></div>
+            <div data-part="bottom-6"></div>
+            <div data-part="bottom-7"></div>
+            <div data-part="bottom-8"></div>
+            <div data-part="bottom-9"></div>
+        </div>
+    </div>
+
+    <!-- Affichage de la section -->
+    <div id="section-info" class="section-info"></div>
+
+    <script>
+        const cube = document.getElementById('cube');
+        let isDragging = false;
+        let previousX, previousY;
+        let rotationX = -20, rotationY = 30;
+
+        // Gestion des événements souris pour rotation
+        document.addEventListener('mousedown', (event) => {
+            isDragging = true;
+            previousX = event.clientX;
+            previousY = event.clientY;
+        });
+
+        document.addEventListener('mousemove', (event) => {
+            if (isDragging) {
+                const deltaX = event.clientX - previousX;
+                const deltaY = event.clientY - previousY;
+                rotationY += deltaX * 0.5;
+                rotationX -= deltaY * 0.5;
+                cube.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
+                previousX = event.clientX;
+                previousY = event.clientY;
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+
+        // Fonction pour ajouter un colis
+        const sections = document.querySelectorAll('.cube-face div');
+        sections.forEach(section => {
+            section.addEventListener('click', (event) => {
+                const partName = event.target.dataset.part;
+
+                if (!section.classList.contains('filled')) {
+                    section.classList.add('filled');
+                    section.textContent = '📦'; // Colis ajouté
+                    section.style.fontSize = "12px"; // Colis plus petit
+
+                    // Affichage de la section dans laquelle le colis a été placé
+                    document.getElementById('section-info').textContent = `Colis ajouté à la section : ${partName}.`;
+                } else {
+                    alert('Cette section est déjà occupée.');
+                }
+            });
+        });
+
+        // Fonction pour ouvrir une face (voir l'intérieur)
+        const faces = document.querySelectorAll('.cube-face');
+        faces.forEach(face => {
+            face.addEventListener('dblclick', () => {
+                face.classList.toggle('hidden');
+                face.classList.toggle('open');
+                alert('Face ouverte pour voir l’intérieur.');
+            });
+        });
+    </script>
+</body>
+</html>

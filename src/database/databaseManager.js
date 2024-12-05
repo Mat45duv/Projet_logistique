@@ -1,6 +1,5 @@
 /**
  * @file databaseManager.js
- * @author Maxencexz
  * @description Fichier de gestion de la base de données.
  */
 
@@ -72,11 +71,13 @@ module.exports = {
                 livraisonsDatabase.findOne({ id }, async (err, doc) => {
                     if (err || !doc) return resolve(null);
                     if (includeBag && doc.numBag) {
-                        bagsDatabase.findOne({ id: doc.numBag }, (err, bagDoc) => {
+                        module.exports.bags.obtenirBagAvecId(doc.numBag).then(bagDoc => {
                             doc.bag = bagDoc || null;
+                            resolve(doc);
                         });
+                    } else {
+                        resolve(doc);
                     }
-                    return resolve(doc);
                 });
             });
         },
@@ -87,13 +88,14 @@ module.exports = {
                 livraisonsDatabase.find({}, async (err, docs) => {
                     if (err || !docs) return resolve(null);
                     if (includeBag) {
-                        for (const doc of docs) {
+                        const promises = docs.map(doc => {
                             if (doc.numBag) {
-                                bagsDatabase.findOne({ id: doc.numBag }, (err, bagDoc) => {
+                                return module.exports.bags.obtenirBagAvecId(doc.numBag).then(bagDoc => {
                                     doc.bag = bagDoc || null;
                                 });
                             }
-                        }
+                        });
+                        await Promise.all(promises);
                     }
                     return resolve(docs);
                 });

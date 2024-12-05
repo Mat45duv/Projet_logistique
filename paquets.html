@@ -173,7 +173,7 @@
             packages.forEach(pkg => {
                 const packageDiv = document.createElement('div');
                 packageDiv.className = 'package';
-                packageDiv.textContent = `Colis ${pkg.id}`;
+                packageDiv.textContent = `Big Bag ${pkg.id}`;
                 packageDiv.onclick = () => showPopup(pkg.info);
                 cargo.appendChild(packageDiv);
             });

@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="style1.css">
 </head>
 <body>
-  
 
     <div class="truck-size-selector">
         <button class="btn" onclick="setTruckSize('standard')">Standard</button>
@@ -29,12 +28,6 @@
             <div class="cab" id="cab2">Bas</div>
             <div class="cargo" id="cargo2"></div>
         </div>
-    </div>
-
-    <div class="info-popup" id="infoPopup">
-        <h2>Informations sur le colis</h2>
-        <p id="infoText"></p>
-        <button onclick="closePopup()">Fermer</button>
     </div>
 
     <script>
@@ -74,28 +67,17 @@
 
                 const packageDiv = document.createElement('div');
                 packageDiv.className = 'package';
-                packageDiv.textContent = `Colis ${index + 1}`;
+                packageDiv.textContent = `Big Bag ${index + 1}`;
                 packageDiv.style.animationDelay = `${index * 0.1}s`; // Définir un délai progressif
-                packageDiv.onclick = () => showPopup(`Colis ${index + 1}`, position, `Position: ${position}`);
+                packageDiv.onclick = () => redirectToInfoPage(index + 1, position); // Rediriger vers la page d'infos
                 cargo.appendChild(packageDiv);
             });
         }
 
-        // Fonction pour afficher les informations d'un colis
-        function showPopup(colis, position, infos) {
-            const popup = document.getElementById('infoPopup');
-            const infoText = document.getElementById('infoText');
-            infoText.innerHTML = `
-                <strong>${colis}</strong><br>
-                Position: <strong>${position}</strong><br>
-                ${infos}
-            `;
-            popup.style.display = 'block';
-        }
-
-        // Fonction pour fermer la popup
-        function closePopup() {
-            document.getElementById('infoPopup').style.display = 'none';
+        // Fonction pour rediriger vers la page d'informations avec les paramètres du colis
+        function redirectToInfoPage(colisNumber, position) {
+            const url = `camion.html?colis=${colisNumber}&position=${encodeURIComponent(position)}`;
+            window.location.href = url;
         }
 
         // Fonction pour changer la taille des camions

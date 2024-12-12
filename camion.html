@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Big Bag 3D Interactif</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #f0f0f0;
+        }
+
+        /* Conteneur principal de la scène */
+        .scene {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1500px;
+            position: relative;
+        }
+
+        /* Le sac Big Bag en forme de rectangle */
+        .big-bag {
+            width: 300px;
+            height: 150px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease;
+            border: 2px solid #a0522d;
+        }
+
+        /* Les niveaux du sac (top, middle, bottom) */
+        .level {
+            position: absolute;
+            width: 100%;
+            height: 33.33%;
+            background-color: #d2691e;
+            border: 2px solid #a0522d;
+            box-sizing: border-box;
+            transition: background-color 0.3s;
+        }
+
+        /* Le haut du sac */
+        .level.top {
+            top: 0;
+            background-color: #a0522d;
+        }
+
+        /* Le milieu du sac */
+        .level.middle {
+            top: 33.33%;
+            background-color: #8b4513;
+        }
+
+        /* Le bas du sac */
+        .level.bottom {
+            top: 66.66%;
+            background-color: #d2691e;
+            border-radius: 0 0 10px 10px;
+        }
+
+        /* Effet gris lorsqu'une partie est cliquée */
+        .grise {
+            background-color: #808080 !important;
+        }
+
+        /* Le colis à l'intérieur du sac */
+        .parcel {
+            width: 50px;
+            height: 50px;
+            background-color: #ff6347;
+            border: 2px solid #b22222;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        /* Partie colorée où se trouve le colis */
+        .highlight {
+            background-color: red !important;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="scene">
+        <div class="big-bag" id="bigBag">
+            <div class="level top" id="topLevel" onclick="griser(this)"></div>
+            <div class="level middle" id="middleLevel" onclick="griser(this)"></div>
+            <div class="level bottom" id="bottomLevel" onclick="griser(this)"></div>
+            <!-- Colis à l'intérieur du sac -->
+            <div class="parcel" id="parcel"></div>
+        </div>
+    </div>
+
+    <script>
+        // Fonction pour griser la partie cliquée
+        function griser(level) {
+            level.classList.toggle('grise');
+        }
+
+        // Variables pour la rotation interactive
+        let bigBag = document.getElementById('bigBag');
+        let parcel = document.getElementById('parcel');
+        let isDragging = false;
+        let lastX = 0, lastY = 0;
+
+        // Fonction pour commencer à faire glisser
+        bigBag.addEventListener('mousedown', function (event) {
+            isDragging = true;
+            lastX = event.clientX;
+            lastY = event.clientY;
+        });
+
+        // Fonction pour arrêter le glissement
+        window.addEventListener('mouseup', function () {
+            isDragging = false;
+        });
+
+        // Fonction pour la rotation du sac selon le mouvement de la souris
+        window.addEventListener('mousemove', function (event) {
+            if (!isDragging) return;
+
+            let deltaX = event.clientX - lastX;
+            let deltaY = event.clientY - lastY;
+
+            // Calculer les angles de rotation pour l'effet 3D
+            let rotateX = deltaY * 0.3;
+            let rotateY = deltaX * 0.3;
+
+            // Appliquer la rotation 3D
+            let currentRotation = bigBag.style.transform;
+            let newRotation = `rotateX(${parseFloat(currentRotation.match(/rotateX\((-?\d+\.?\d*)deg\)/)?.[1] || 0) + rotateX}deg) rotateY(${parseFloat(currentRotation.match(/rotateY\((-?\d+\.?\d*)deg\)/)?.[1] || 0) + rotateY}deg)`;
+            bigBag.style.transform = newRotation;
+
+            // Mettre à jour la position de la souris
+            lastX = event.clientX;
+            lastY = event.clientY;
+        });
+
+        // Fonction pour déplacer le colis à l'intérieur du sac
+        parcel.addEventListener('click', function(event) {
+            let rect = bigBag.getBoundingClientRect();
+            let offsetX = event.clientX - rect.left;
+            let offsetY = event.clientY - rect.top;
+
+            // Limiter les mouvements du colis à l'intérieur du sac
+            offsetX = Math.max(0, Math.min(rect.width - parcel.offsetWidth, offsetX));
+            offsetY = Math.max(0, Math.min(rect.height - parcel.offsetHeight, offsetY));
+
+            // Déplacer le colis en fonction de la position de la souris
+            parcel.style.transform = `translate(-50%, -50%) translate(${offsetX - 150}px, ${offsetY - 75}px)`;
+
+            // Mettre à jour la couleur de la section du sac où se trouve le colis
+            highlightSection(offsetY);
+        });
+
+        // Fonction pour colorier la section où le colis se trouve
+        function highlightSection(offsetY) {
+            // Réinitialiser les couleurs
+            document.getElementById('topLevel').classList.remove('highlight');
+            document.getElementById('middleLevel').classList.remove('highlight');
+            document.getElementById('bottomLevel').classList.remove('highlight');
+
+            // Ajouter la couleur rouge à la section en fonction de la position du colis
+            if (offsetY < 50) {
+                document.getElementById('topLevel').classList.add('highlight');
+            } else if (offsetY >= 50 && offsetY < 100) {
+                document.getElementById('middleLevel').classList.add('highlight');
+            } else {
+                document.getElementById('bottomLevel').classList.add('highlight');
+            }
+        }
+    </script>
+
+</body>
+</html>

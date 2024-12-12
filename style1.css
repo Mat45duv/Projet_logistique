@@ -10,6 +10,20 @@ body {
     background-color: #f0f0f0;
 }
 
+/* Texte animé pour le message de livraison */
+.delivery-message {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #007bff;
+    margin: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    border-right: 4px solid #007bff;
+    animation: slideIn 5s linear infinite;
+}
+
+
+
 /* Styles des boutons */
 .truck-size-selector {
     margin: 20px;

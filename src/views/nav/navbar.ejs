@@ -1,0 +1,57 @@
+<nav class="navbar">
+    <div class="navbar-container">
+        <a href="/" class="navbar-logo">Mon Projet</a>
+        <ul class="navbar-links">
+            <li><a href="/">Accueil</a></li>
+            <li><a href="/bags">Rangement (Bags)</a></li>
+            <li><a href="/login-destroy">Déconnexion</a></li>
+        </ul>
+    </div>
+</nav>
+<style>
+    .navbar {
+        background-color: #333;
+        color: white;
+        padding: 10px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .navbar-container {
+        max-width: 1200px;
+        margin: auto;
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .navbar-logo {
+        font-size: 20px;
+        text-decoration: none;
+        color: white;
+        font-weight: bold;
+    }
+
+    .navbar-links {
+        list-style: none;
+        display: flex;
+        gap: 15px;
+    }
+
+    .navbar-links li {
+        display: inline-block;
+    }
+
+    .navbar-links a {
+        text-decoration: none;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }
+
+    .navbar-links a:hover {
+        background-color: #555;
+    }
+</style>

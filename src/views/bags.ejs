@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rangement du colis</title>
+    <link href="/assets/css/cube.css" rel="stylesheet" />
+</head>
+<body>
+    <%- include('nav/navbar') %>
+    <script src="/assets/js/cube.js"></script>
+    <div class="container">
+        <h2>Scannez un colis</h2>
+        <input type="text" id="colis" placeholder="Entrez l'ID du colis" />
+        <button onclick="scannerColis()">Scanner</button>
+        
+        <h3>Ranger le colis dans le bag</h3>
+        <div id="rack" class="rack">
+            <div class="zone disabled" id="zone-haut" onclick="choisirZone('haut')">Haut</div>
+            <div class="zone disabled" id="zone-milieu" onclick="choisirZone('milieu')">Milieu</div>
+            <div class="zone" id="zone-bas" onclick="choisirZone('bas')">Bas</div>
+        </div>
+        <button onclick="confirmerRangement()">Confirmer et Passer au Niveau Suivant</button>
+        <p id="confirmation"></p>
+        <p id="compteurs"></p>
+        
+        <h3>Regarder une case</h3>
+        <div class="buttons">
+            <button onclick="regarderCase('bas')">Voir contenu - Bas</button>
+            <button onclick="regarderCase('milieu')">Voir contenu - Milieu</button>
+            <button onclick="regarderCase('haut')">Voir contenu - Haut</button>
+        </div>
+        <p id="contenu"></p>
+    </div>
+    
+</body>
+</html>

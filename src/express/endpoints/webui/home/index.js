@@ -14,14 +14,9 @@ module.exports = {
         "session": true,
         "api": false
     },
-    "middlewares": [
-        middlewaresList.userAccountActive
-    ],
     "path": "/",
     "execute": async function (routerRequest, routerResponse) {
-
-        // On retourne un message de bienvenue
-        routerResponse.status(200).send("Bienvenue sur l'application web de test.");
-
+        // Render la vue 'home.ejs'
+        routerResponse.render("home");
     }
-}
+};

@@ -12,28 +12,29 @@
             background-color: #f0f0f0;
         }
 
-        /* Conteneur principal de la scène */
+        /* Conteneur principal de la scène avec perspective */
         .scene {
             width: 100vw;
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            perspective: 1500px;
+            perspective: 1500px; /* Perspective pour l'effet 3D */
             position: relative;
         }
 
-        /* Le sac Big Bag en forme de rectangle */
+        /* Le sac Big Bag en forme de rectangle avec transformation 3D */
         .big-bag {
             width: 300px;
             height: 150px;
             position: relative;
             transform-style: preserve-3d;
             transition: transform 0.1s ease;
+            transform: rotateX(0deg) rotateY(0deg); /* Initialisation de la rotation */
             border: 2px solid #a0522d;
         }
 
-        /* Les niveaux du sac (top, middle, bottom) */
+        /* Les niveaux du sac (top, middle, bottom) avec différentes profondeurs */
         .level {
             position: absolute;
             width: 100%;
@@ -44,20 +45,17 @@
             transition: background-color 0.3s;
         }
 
-        /* Le haut du sac */
-        .level.top {
+        .top {
             top: 0;
             background-color: #a0522d;
         }
 
-        /* Le milieu du sac */
-        .level.middle {
+        .middle {
             top: 33.33%;
             background-color: #8b4513;
         }
 
-        /* Le bas du sac */
-        .level.bottom {
+        .bottom {
             top: 66.66%;
             background-color: #d2691e;
             border-radius: 0 0 10px 10px;
@@ -66,6 +64,11 @@
         /* Effet gris lorsqu'une partie est cliquée */
         .grise {
             background-color: #808080 !important;
+        }
+
+        /* Partie colorée où se trouve le colis */
+        .highlight {
+            background-color: red !important;
         }
 
         /* Le colis à l'intérieur du sac */
@@ -81,12 +84,6 @@
             cursor: pointer;
             transition: transform 0.2s ease;
         }
-
-        /* Partie colorée où se trouve le colis */
-        .highlight {
-            background-color: red !important;
-        }
-
     </style>
 </head>
 <body>

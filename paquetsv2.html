@@ -4,19 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Camions de livraison</title>
-      
     <link rel="stylesheet" href="style1.css">
-
-
 </head>
 <body>
+    <div class="truck-size-selector">
+        <button class="btn" onclick="setTruckSize('standard')">Standard</button>
+        <button class="btn" onclick="setTruckSize('compact')">Compact</button>
+        <button class="btn" onclick="setTruckSize('grand')">Grand</button>
+        <button class="btn" onclick="setTruckSize('extra-large')">Extra Large</button>
+        <button class="btn" onclick="setTruckSize('mini')">Mini</button>
+    </div>
+
     <div class="trucks-container">
+        <!-- Camion gauche -->
         <div class="truck-container">
-            <div class="cab" id="cab1"></div>
+            <div class="cab" id="cab1">Haut</div>
             <div class="cargo" id="cargo1"></div>
         </div>
+
+        <!-- Camion droit -->
         <div class="truck-container">
-            <div class="cab" id="cab2"></div>
+            <div class="cab" id="cab2">Bas</div>
             <div class="cargo" id="cargo2"></div>
         </div>
     </div>
@@ -28,59 +36,80 @@
     </div>
 
     <script>
-        // Fonction pour générer les colis dans un conteneur spécifique
-        function generatePackages(containerId) {
-            const cargo = document.getElementById(containerId);
-            const packages = [
-                { id: 1, info: "Colis 1 : Livres" },
-                { id: 2, info: "Colis 2 : Vêtements" },
-                { id: 3, info: "Colis 3 : Électronique" },
-                { id: 4, info: "Colis 4 : Jouets" },
-                { id: 5, info: "Colis 5 : Nourriture" },
-                { id: 6, info: "Colis 6 : Accessoires" },
-                { id: 7, info: "Colis 7 : Documents" },
-                { id: 8, info: "Colis 8 : Meubles" },
-                { id: 9, info: "Colis 9 : Outils" },
-                { id: 10, info: "Colis 10 : Produits de beauté" },
-                { id: 11, info: "Colis 11 : Jouets pour animaux" },
-                { id: 12, info: "Colis 12 : Produits de nettoyage" },
-                { id: 13, info: "Colis 13 : Gadgets" },
-                { id: 14, info: "Colis 14 : Fleurs" },
-                { id: 15, info: "Colis 15 : Matériel de bureau" },
-                { id: 16, info: "Colis 16 : Médicaments" },
-                { id: 17, info: "Colis 17 : Chaussures" },
-                { id: 18, info: "Colis 18 : Articles de sport" },
-                { id: 19, info: "Colis 19 : Articles de décoration" },
-                { id: 20, info: "Colis 20 : Jeux vidéo" },
-                { id: 21, info: "Colis 21 : Alimentation pour animaux" },
-            ];
+        // Paramètres des camions pour chaque taille
+        const truckConfigurations = {
+            compact: { columns: 2, rows: 3 },
+            standard: { columns: 3, rows: 4 },
+            grand: { columns: 4, rows: 5 },
+            "extra-large": { columns: 5, rows: 7 },
+            mini: { columns: 1, rows: 2 }
+        };
 
-            packages.forEach(pkg => {
+        // Fonction pour déterminer la position verticale du colis
+        function getPosition(row, totalRows) {
+            if (row < totalRows / 3) {
+                return 'Haute';
+            } else if (row < (2 * totalRows) / 3) {
+                return 'Milieu';
+            } else {
+                return 'Basse';
+            }
+        }
+
+        // Fonction pour générer les colis avec animation au chargement
+        function generatePackages(containerId, size) {
+            const cargo = document.getElementById(containerId);
+            cargo.innerHTML = ""; // Nettoie le contenu existant
+
+            const { columns, rows } = truckConfigurations[size];
+            cargo.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
+            cargo.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
+
+            const totalPackages = columns * rows;
+            Array.from({ length: totalPackages }).forEach((_, index) => {
+                const row = Math.floor(index / columns); // Calculer la ligne
+                const position = getPosition(row, rows);
+
                 const packageDiv = document.createElement('div');
                 packageDiv.className = 'package';
-                packageDiv.textContent = `Big Bag ${pkg.id}`;
-                packageDiv.onclick = () => showPopup(pkg.info);
+                packageDiv.textContent = `Colis ${index + 1}`;
+                packageDiv.style.animationDelay = `${index * 0.1}s`; // Définir un délai progressif
+                packageDiv.onclick = () => showPopup(`Colis ${index + 1}`, position, `Position: ${position}`);
                 cargo.appendChild(packageDiv);
             });
         }
 
-        // Générer les colis pour chaque camion
-        generatePackages('cargo1');
-        generatePackages('cargo2');
-
         // Fonction pour afficher les informations d'un colis
-        function showPopup(info) {
+        function showPopup(colis, position, infos) {
             const popup = document.getElementById('infoPopup');
             const infoText = document.getElementById('infoText');
-            infoText.textContent = info;
+            infoText.innerHTML = `
+                <strong>${colis}</strong><br>
+                Position: <strong>${position}</strong><br>
+                ${infos}
+            `;
             popup.style.display = 'block';
         }
 
         // Fonction pour fermer la popup
         function closePopup() {
-            const popup = document.getElementById('infoPopup');
-            popup.style.display = 'none';
+            document.getElementById('infoPopup').style.display = 'none';
         }
+
+        // Fonction pour changer la taille des camions
+        function setTruckSize(size) {
+            const trucks = document.querySelectorAll('.truck-container');
+            trucks.forEach((truck, index) => {
+                truck.className = `truck-container ${size}`;
+                generatePackages(`cargo${index + 1}`, size);
+            });
+        }
+
+        // Initialisation avec taille standard et animation au chargement
+        document.addEventListener('DOMContentLoaded', () => {
+            generatePackages('cargo1', 'standard');
+            generatePackages('cargo2', 'standard');
+        });
     </script>
 </body>
 </html>

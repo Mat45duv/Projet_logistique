@@ -1,144 +1,136 @@
+/* Styles pour le body */
 body {
-    font-family: 'Roboto', sans-serif;
-  }
-  .has-text-blue {
-    color: blue !important;
-  }
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+}
 
-  body {
-      font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      background-color: #f0f0f0;
-  }
+/* Styles des boutons */
+.truck-size-selector {
+    margin: 20px;
+    display: flex;
+    gap: 10px;
+}
 
-  .trucks-container {
-      display: flex;
-      flex-wrap: wrap; /* Permet de passer à plusieurs lignes si nécessaire */
-      gap: 20px;
-      justify-content: center; /* Centrage horizontal */
-  }
+.btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
 
-  .truck-container {
-      width: 300px;
-      height: 700px;
-      background-color: #cccccc;
-      border: 5px solid #555;
-      border-radius: 10px;
-      display: flex;
-      flex-direction: column;
-      padding: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  }
+.btn:hover {
+    background-color: #0056b3;
+    transform: scale(1.1);
+}
 
-  .cab {
-      width: 100%;
-      height: 100px;
-      background-color: #888;
-      border-bottom: 5px solid #555;
-      border-radius: 5px 5px 0 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-  }
+/* Conteneur des camions */
+.trucks-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    justify-content: center;
+}
 
-  #cab1:before {
-      content: "Bas"; /* Texte pour la cabine du camion de gauche */
-      font-weight: bold;
-      color: #fff;
-  }
+.truck-container {
+    background-color: #cccccc;
+    border: 3px solid #555;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    position: relative;
+    width: 25vw;
+    height: 50vh;
+}
 
-  #cab2:before {
-      content: "Haut"; /* Texte pour la cabine du camion de droite */
-      font-weight: bold;
-      color: #fff;
-  }
+/* Cabine */
+.cab {
+    height: 20%;
+    background-color: #888;
+    text-align: center;
+    line-height: 2em;
+    font-weight: bold;
+    color: white;
+    border-bottom: 5px solid #555;
+    border-radius: 10px 10px 0 0;
+}
 
-  .cargo {
-      flex: 1;
-      background-color: #fff;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr); /* 3 colonnes fixes */
-      grid-template-rows: repeat(7, 1fr);
-      grid-gap: 10px;
-      padding: 10px;
-      border: 5px solid #555;
-      border-radius: 0 0 10px 10px;
-  }
+/* Cargo */
+.cargo {
+    flex: 1;
+    background-color: #f4f4f4;
+    display: grid;
+    gap: 5px;
+    padding: 5px;
+    border-top: 2px solid #555;
+}
 
-  .package {
-      width: 100%;
-      height: 50px;
-      background-color: #ffcc00;
-      border: 2px solid #b8860b;
-      border-radius: 5px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 12px;
-      font-weight: bold;
-      color: #663300;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-      cursor: pointer;
-      transition: transform 0.2s ease;
-  }
+/* Colis */
+.package {
+    background-color: #ffcc00;
+    border: 2px solid #b8860b;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.8vw;
+    font-weight: bold;
+    color: #663300;
+    cursor: pointer;
+    animation: fadeIn 0.5s ease-in-out;
+    animation-fill-mode: backwards; /* Maintient l'état initial */
+}
 
-  .package:hover {
-      transform: scale(1.1);
-  }
+/* Animation pour les colis */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
 
-  .info-popup {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: white;
-      border: 2px solid #555;
-      border-radius: 10px;
-      padding: 20px;
-      width: 300px;
-      text-align: center;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      display: none;
-  }
+/* Popup */
+.info-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border: 2px solid #555;
+    border-radius: 10px;
+    padding: 20px;
+    width: 300px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    display: none;
+}
 
-  .info-popup h2 {
-      margin-top: 0;
-  }
+.info-popup button {
+    margin-top: 10px;
+    padding: 10px 15px;
+    background-color: #888;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
 
-  .info-popup button {
-      margin-top: 10px;
-      padding: 5px 10px;
-      border: none;
-      background-color: #888;
-      color: white;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-  }
-
-  .info-popup button:hover {
-      background-color: #555;
-  }
-
-  /* Responsive: Ajuste la taille des camions sur petits écrans */
-  @media (max-width: 768px) {
-      .truck-container {
-          width: 90%; /* Les camions s'adaptent à la largeur de l'écran */
-          height: auto; /* Ajuste la hauteur automatiquement */
-      }
-
-      .cargo {
-          grid-template-columns: repeat(3, 1fr); /* Toujours 3 colonnes */
-      }
-  }
-
-  @media (max-width: 480px) {
-      .truck-container {
-          width: 100%; /* Prend toute la largeur sur les très petits écrans */
-      }
-  }
+.info-popup button:hover {
+    background-color: #555;
+}

@@ -101,7 +101,6 @@ async function chargerEndpoints(app, cheminDossier) {
 
     // Charger les endpoints avec priorité normale
     for (const routeur of normalPriorityEndpoints) {
-        console.log("Chargement de l'endpoint", routeur.path);
         await configurerRoute(app, routeur);
     }
 
@@ -117,9 +116,6 @@ module.exports = async function (app) {
 
     try {
         await chargerEndpoints(app, endpointsDir);
-
-       
-
     } catch (error) {
         console.error(`[❌] [WEB SERVER] Erreur pendant le chargement des endpoints : ${error.message}`);
     }

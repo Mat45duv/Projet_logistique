@@ -16,7 +16,8 @@ const __modules = {
     endpointsLoader: require("./src/express/endpointsLoader"),
     nocache: require("nocache"),
     https: require("https"), // HTTPS module
-    fs: require("fs") // File system module to read certificate and key files
+    fs: require("fs"), // File system module to read certificate and key files,
+    databaseManager: require("./src/database/databaseManager")
 };
 
 // Création de l'application Express
@@ -42,7 +43,18 @@ const httpsOptions = {
 };
 
 // Start the HTTPS server
-const server = __modules.https.createServer(httpsOptions, app).listen(process.env.EXPRESS_PORT, async () => {
+const server = __modules.https.createServer(httpsOptions, app).listen(process.env["EXPRESS_PORT"], async () => {
+
+    // On se connecte à la base de données
+    const dbConnect = await __modules.databaseManager.connect();
+    if(!dbConnect) {
+        console.log("[❌] [DATABASE] Impossible de se connecter à la base de données.");
+        process.exit(1);
+    }
+
+    console.log(`[🔒] [DATABASE] Base de données connectée avec succès.`);
+
     console.log(`[🔒] [WEB SERVER] Application Express démarrée en HTTPS; chargement des endpoints...`);
+    console.log("[🔗] [WEB SERVER] Port: " + process.env["EXPRESS_PORT"]);
     await __modules.endpointsLoader(app);
 });

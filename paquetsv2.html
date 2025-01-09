@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camions de livraison</title>
+    <link rel="stylesheet" href="style1.css">
+</head>
+<body>
+
+    <div class="truck-size-selector">
+        <button class="btn" onclick="setTruckSize('standard')">Standard</button>
+        <button class="btn" onclick="setTruckSize('compact')">Compact</button>
+        <button class="btn" onclick="setTruckSize('grand')">Grand</button>
+        <button class="btn" onclick="setTruckSize('extra-large')">Extra Large</button>
+        <button class="btn" onclick="setTruckSize('mini')">Mini</button>
+    </div>
+
+    <div class="trucks-container">
+        <!-- Camion gauche -->
+        <div class="truck-container">
+            <div class="cab" id="cab1">Haut</div>
+            <div class="cargo" id="cargo1"></div>
+        </div>
+
+        <!-- Camion droit -->
+        <div class="truck-container">
+            <div class="cab" id="cab2">Bas</div>
+            <div class="cargo" id="cargo2"></div>
+        </div>
+    </div>
+
+    <script>
+        // Paramètres des camions pour chaque taille
+        const truckConfigurations = {
+            compact: { columns: 2, rows: 3 },
+            standard: { columns: 3, rows: 4 },
+            grand: { columns: 4, rows: 5 },
+            "extra-large": { columns: 5, rows: 7 },
+            mini: { columns: 1, rows: 2 }
+        };
+
+        // Fonction pour déterminer la position verticale du colis
+        function getPosition(row, totalRows) {
+            if (row < totalRows / 3) {
+                return 'Haute';
+            } else if (row < (2 * totalRows) / 3) {
+                return 'Milieu';
+            } else {
+                return 'Basse';
+            }
+        }
+
+        // Fonction pour générer les colis avec animation au chargement
+        function generatePackages(containerId, size) {
+            const cargo = document.getElementById(containerId);
+            cargo.innerHTML = ""; // Nettoie le contenu existant
+
+            const { columns, rows } = truckConfigurations[size];
+            cargo.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
+            cargo.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
+
+            const totalPackages = columns * rows;
+            Array.from({ length: totalPackages }).forEach((_, index) => {
+                const row = Math.floor(index / columns); // Calculer la ligne
+                const position = getPosition(row, rows);
+
+                const packageDiv = document.createElement('div');
+                packageDiv.className = 'package';
+                packageDiv.textContent = `Big Bag ${index + 1}`;
+                packageDiv.style.animationDelay = `${index * 0.1}s`; // Définir un délai progressif
+                packageDiv.onclick = () => redirectToInfoPage(index + 1, position); // Rediriger vers la page d'infos
+                cargo.appendChild(packageDiv);
+            });
+        }
+
+        // Fonction pour rediriger vers la page d'informations avec les paramètres du colis
+        function redirectToInfoPage(colisNumber, position) {
+            const url = `camion.html?colis=${colisNumber}&position=${encodeURIComponent(position)}`;
+            window.location.href = url;
+        }
+
+        // Fonction pour changer la taille des camions
+        function setTruckSize(size) {
+            const trucks = document.querySelectorAll('.truck-container');
+            trucks.forEach((truck, index) => {
+                truck.className = `truck-container ${size}`;
+                generatePackages(`cargo${index + 1}`, size);
+            });
+        }
+
+        // Initialisation avec taille standard et animation au chargement
+        document.addEventListener('DOMContentLoaded', () => {
+            generatePackages('cargo1', 'standard');
+            generatePackages('cargo2', 'standard');
+        });
+    </script>
+</body>
+</html>

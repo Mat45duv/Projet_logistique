@@ -27,5 +27,5 @@ module.exports = Mongoose.model('Livraison', new Mongoose.Schema({
     misAJourLe: { type: Date, default: Date.now },
     camion: { type: Mongoose.Schema.Types.ObjectId, ref: 'Camion', required: false }
 }, {
-    timestamps: true // Ajoute automatiquement les champs `creeLe` et `misAJourLe`
+    timestamps: true
 }));

@@ -5,22 +5,22 @@
  */
 
 // Modules nécessaires
-const databaseManager = require("../../../../database/databaseManager");
+const databaseManager = require("../../../../../database/databaseManager");
 
 module.exports = {
     "enabled": true,
-    "method": "POST",
+    "method": "GET",
     "auth": {
         "session": true,
         "api": false
     },
-    "path": "/api/livraisons/getInfo",
+    "path": "/api/fetch/livraison",
     "execute": async function (routerRequest, routerResponse) {
 
         try {
 
             // On obtient les paramètres de la requête (body)
-            const { id } = routerRequest.body;
+            const { id } = routerRequest.query;
 
             // On vérifie qu'on a bien un ID
             if (!id) {
@@ -33,20 +33,17 @@ module.exports = {
                 });
             };
 
-            // On tente d'obtenir les informations de la livraison
-            const livraison = await databaseManager.livraisons.obtenirLivraisonAvecID(id);
+            // On tente d'obtenir la livraison
+            const livraison = await databaseManager.livraisons.obtenirLivraisonAvecId(id);
             if (!livraison) {
                 return routerResponse.status(404).json({
                     error: {
-                        message: "Aucune livraison n'a été trouvée avec cet ID.",
+                        message: "Livraison introuvable.",
                         type: "not_found",
-                        code: "livraison_not_found"
+                        code: "delivery_not_found"
                     }
                 });
             }
-
-            // On retourne les informations de la livraison
-            delete livraison._id;
 
             return routerResponse.status(200).json({
                 data: livraison

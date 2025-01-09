@@ -103,7 +103,7 @@ module.exports = {
         // Fonction : obtenir un client avec son ID
         obtenirClientAvecId: async (id) => {
             try {
-                const client = await __modules.ClientSchema.findOne({ id });
+                const client = await __modules.ClientSchema.findOne({ id })
                 return client || null;
             } catch (error) {
                 console.error(error);
@@ -155,7 +155,10 @@ module.exports = {
         // Fonction : obtenir une livraison avec son ID
         obtenirLivraisonAvecId: async (id) => {
             try {
-                const livraison = await __modules.LivraisonSchema.findOne({ id });
+                const livraison = await __modules.LivraisonSchema.findOne({ id }).populate('client')
+                    .populate('articles.produit')
+                    .populate('sac')
+                    .populate('camion');
                 return livraison || null;
             } catch (error) {
                 console.error(error);
@@ -166,7 +169,16 @@ module.exports = {
         // Fonction : obtenir une livraison avec le client associé (par ID client)
         obtenirLivraisonAvecClientId: async (clientId) => {
             try {
-                const livraison = await __modules.LivraisonSchema.findOne({ client: clientId });
+                const livraison = await __modules.LivraisonSchema.findOne({ client: clientId })
+                    .populate('client')                 // Populates the client object
+                    .populate('articles.produit')       // Populates produit inside the articles array
+                    .populate('sac')                    // Populates sac object
+                    .populate('camion')                 // Populates camion object
+                    .populate({
+                        path: 'camion.conducteur',     // Explicitly populate conducteur inside camion
+                        strictPopulate: false          // Allow to populate nested path
+                    })
+                    .populate('camion.sacs')            // Populates sacs inside camion
                 return livraison || null;
             } catch (error) {
                 console.error(error);
@@ -177,7 +189,16 @@ module.exports = {
         // Fonction : obtenir toutes les livraisons d'un client
         obtenirToutesLivraisonsClient: async (clientId) => {
             try {
-                const livraisons = await __modules.LivraisonSchema.find({ client: clientId });
+                const livraisons = await __modules.LivraisonSchema.find({ client: clientId })
+                    .populate('client')                 // Populates the client object
+                    .populate('articles.produit')       // Populates produit inside the articles array
+                    .populate('sac')                    // Populates sac object
+                    .populate('camion')                 // Populates camion object
+                    .populate({
+                        path: 'camion.conducteur',     // Explicitly populate conducteur inside camion
+                        strictPopulate: false          // Allow to populate nested path
+                    })
+                    .populate('camion.sacs')            // Populates sacs inside camion
                 return livraisons || [];
             } catch (error) {
                 console.error(error);
@@ -320,7 +341,10 @@ module.exports = {
         // Fonction : obtenir un sac avec son ID
         obtenirSacAvecId: async (id) => {
             try {
-                const sac = await __modules.SacSchema.findOne({ id });
+                const sac = await __modules.SacSchema.findOne({ id }).populate({
+                    path: 'articles.produit',
+                    model: 'Produit'
+                });
                 return sac || null;
             } catch (error) {
                 console.error(error);
@@ -331,7 +355,10 @@ module.exports = {
         // Fonction : obtenir tous les sacs
         obtenirTousSacs: async () => {
             try {
-                const tousLesSacs = await __modules.SacSchema.find({});
+                const tousLesSacs = await __modules.SacSchema.find({}).populate({
+                    path: 'articles.produit',
+                    model: 'Produit'
+                });
                 return tousLesSacs || [];
             } catch (error) {
                 console.error(error);
@@ -399,7 +426,7 @@ module.exports = {
         // Fonction : obtenir un camion avec son ID
         obtenirCamionAvecId: async (id) => {
             try {
-                const camion = await __modules.CamionSchema.findOne({ id });
+                const camion = await __modules.CamionSchema.findOne({ id }).populate('conducteur').populate('sacs');
                 return camion || null;
             } catch (error) {
                 console.error(error);
@@ -410,7 +437,7 @@ module.exports = {
         // Fonction : obtenir tous les camions
         obtenirTousCamions: async () => {
             try {
-                const tousLesCamions = await __modules.CamionSchema.find({});
+                const tousLesCamions = await __modules.CamionSchema.find({}).populate('conducteur').populate('sacs');
                 return tousLesCamions || [];
             } catch (error) {
                 console.error(error);

@@ -5,9 +5,10 @@
     "ejs": "^3.1.10",
     "express": "^4.21.1",
     "iron-session": "^8.0.4",
+    "mongodb-memory-server": "^10.1.3",
+    "mongoose": "^8.9.3",
     "nedb": "^1.8.0",
     "nocache": "^4.0.0",
-    "nodemon": "^3.1.7",
     "uuid": "^11.0.3"
   },
   "name": "projet_logistique",
@@ -19,5 +20,8 @@
   },
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
 }

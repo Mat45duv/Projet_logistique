@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Delivery Express</title>
+    
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+
+</head>
+<body class="has-background-light is-flex is-flex-direction-column is-justify-content-space-between is-align-items-center" style="min-height: 100vh; margin: 0;">
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <div id="reader" width="700px" height="800px">
+        <script>
+                function onScanSuccess(decodedText, decodedResult) {
+            // handle the scanned code as you like, for example:
+            console.log(`Code matched = ${decodedText}`, decodedResult);
+            }
+
+            function onScanFailure(error) {
+            // handle scan failure, usually better to ignore and keep scanning.
+            // for example:
+            console.warn(`Code scan error = ${error}`);
+            }
+
+            let html5QrcodeScanner = new Html5QrcodeScanner(
+            "reader",
+            { fps: 10, qrbox: {width: 50, height: 30} },
+            /* verbose= */ false);
+            html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+        </script>
+    </div>
+
+  <div class="has-text-centered">
+    <h1 class="title is-1 has-text-link">Scanner</h1>
+    <p class="subtitle is-6 has-text-link">Veuillez scanner votre colis</p>
+  </div>
+
+  <div>
+    <figure class="image is-96x96">
+      <img src="logo.png" alt="Astrodev Logo">
+    </figure>
+  </div>
+
+  <footer class="is-flex is-justify-content-space-between is-align-items-center" style="width: 150px; margin-bottom: 20px;">
+    <span class="icon has-text-warning">
+      <i class="fas fa-home fa-2x"></i>
+    </span>
+    <span class="icon has-text-warning">
+      <i class="fas fa-sign-out-alt fa-2x"></i>
+    </span>
+  </footer>
+
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  
+</body>
+</html>

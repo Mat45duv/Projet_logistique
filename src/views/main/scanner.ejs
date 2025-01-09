@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery Express</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            min-height: 100vh;
+            margin: 0;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            background-color: #f5f5f5;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        #reader {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        @media screen and (max-width: 768px) {
+            #reader {
+                height: 50vh !important;
+                max-width: 100%;
+            }
+
+            .title.is-1 {
+                font-size: 2rem !important;
+            }
+
+            .image.is-96x96 {
+                width: 64px;
+                height: 64px;
+            }
+        }
+
+        #livraisonInfo {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #livraisonInfo p {
+            margin-bottom: 0.75rem;
+            line-height: 1.6;
+        }
+
+        #livraisonInfo ul {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+        }
+
+        #livraisonInfo li {
+            margin-bottom: 0.5rem;
+            padding: 0.5rem;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+
+        .scanner-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        footer {
+            margin-top: auto;
+            padding: 1rem;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .icon {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .icon:hover {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+
+<body>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
+    <div class="scanner-container">
+        <div class="header">
+            <h1 class="title is-1 has-text-link">Scanner</h1>
+            <p class="subtitle is-6 has-text-link">Veuillez scanner votre colis</p>
+        </div>
+
+        <div id="reader"></div>
+
+        <div id="livraisonInfo" class="is-hidden"></div>
+    </div>
+
+    <footer>
+        <span class="icon has-text-warning">
+            <i class="fas fa-home fa-2x"></i>
+        </span>
+        <span class="icon has-text-warning">
+            <i class="fas fa-sign-out-alt fa-2x"></i>
+        </span>
+    </footer>
+
+    <script>
+        function onScanSuccess(decodedText, decodedResult) {
+            const id = JSON.parse(decodedText).id;
+            fetch("/api/livraisons/getInfo", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ id })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.data) {
+                        const livraison = data.data;
+                        const livraisonInfo = document.getElementById("livraisonInfo");
+                        livraisonInfo.classList.remove("is-hidden");
+                        livraisonInfo.innerHTML = `
+                        <h2 class="subtitle is-3">Informations du Colis</h2>
+                        <p><strong>ID:</strong> ${livraison.id}</p>
+                        <p><strong>Nom du Client:</strong> ${livraison.nomClient}</p>
+                        <p><strong>Adresse de Livraison:</strong> ${livraison.adresseLivraison}</p>
+                        <h3 class="subtitle is-4">Produits:</h3>
+                        <ul>
+                            ${livraison.produits.map(produit => `
+                                <li>
+                                    <strong>${produit.nom}</strong> - ${produit.quantite} x ${produit.prixTTC}€ (Réf: ${produit.reference})
+                                </li>
+                            `).join('')}
+                        </ul>
+                        <p><strong>Date de Livraison:</strong> ${new Date(livraison.dateLivraison).toLocaleString()}</p>
+                        <p><strong>Status:</strong> ${livraison.status}</p>
+                        <p><strong>Commentaires:</strong> ${livraison.commentaires || 'Aucun commentaire'}</p>
+                    `;
+                    }
+                })
+                .catch(e => console.error(e));
+        }
+
+        function onScanFailure(error) {
+            console.warn(`Code scan error = ${error}`);
+        }
+
+        window.addEventListener('load', function () {
+            const readerDiv = document.getElementById("reader");
+            const readerWidth = readerDiv.offsetWidth;
+            const readerHeight = Math.min(readerWidth, window.innerHeight * 0.5);
+
+            let html5QrcodeScanner = new Html5QrcodeScanner(
+                "reader", {
+                fps: 10,
+                qrbox: {
+                    width: Math.min(readerWidth, 300),
+                    height: Math.min(readerWidth, 300)
+                }
+            }, false);
+
+            html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+        });
+    </script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</body>
+
+</html>
